@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Demo: Nhiệm vụ ẩn – Hiến máu</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;800&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#f6f3ef;--fg:#1c1917;--mut:#6b625b;--card:#fff;--line:#e5dfd8;--acc:#c81d2e;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);color-scheme:light}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#141214;--fg:#f4efe9;--mut:#a69d95;--card:#1d1a1d;--line:#2d292d;--acc:#ff6b79;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#141214;--fg:#f4efe9;--mut:#a69d95;--card:#1d1a1d;--line:#2d292d;--acc:#ff6b79;color-scheme:dark}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*,*::before,*::after{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--fg);font:15px/1.5 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+.wrap{max-width:400px;margin:0 auto;padding:16px}
+h1{font-size:19px;line-height:1.25;margin:0 0 4px}
+.mut{color:var(--mut);font-size:13px;margin:0 0 14px}
+.stage{position:relative;aspect-ratio:9/16;width:100%;max-width:340px;margin:0 auto;border-radius:20px;overflow:hidden;background:#15121f;color:#fff;font:800 16px/1.2 "Baloo 2","Segoe UI",system-ui,sans-serif;text-align:center;user-select:none}
+.alert{animation:fl .5s steps(2) 4}
+@keyframes fl{50%{background:#7a0f18}}
+.quest{background:linear-gradient(#1b1440,#0f0b24)}
+.fight{background:linear-gradient(#3a0d12,#16080c)}
+.calm{background:linear-gradient(#eadfce,#cbb8a2);color:#2b2320}
+.end{background:linear-gradient(#b3202c,#4a0d14)}
+.ov{position:absolute;opacity:0;transform:scale(.96);transition:opacity .25s,transform .25s;pointer-events:none}
+.ov.on{opacity:1;transform:none}
+.big{top:9%;left:6%;right:6%;font-size:24px;text-shadow:0 2px 8px rgba(0,0,0,.45)}
+.big.stat{top:0;bottom:0;display:flex;align-items:center;justify-content:center}
+.chip{top:10px;left:10px;font-size:12px;background:rgba(0,0,0,.6);color:#fff;padding:2px 10px;border-radius:99px}
+.talk{inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+.talk i{display:none}
+.talk i:empty{display:none}
+.talk p{position:absolute;bottom:8%;left:7%;right:7%;margin:0;font-size:16px;font-weight:600;background:rgba(0,0,0,.65);color:#fff;padding:6px 12px;border-radius:12px}
+.talk p b{display:block;font-size:12px;font-weight:800;color:#ffd166}
+.panel,.dlg{top:20%;left:8%;right:8%;padding:14px;border:2px solid #ffd166;border-radius:14px;background:rgba(0,0,0,.4);font-weight:600;line-height:1.35}
+.panel b{display:block;font-size:20px;color:#ffd166;margin:4px 0}
+.dlg{font-size:20px;font-weight:800}
+.dlg div{display:flex;gap:8px;margin-top:12px;font-size:14px}
+.dlg span{flex:1;padding:8px 4px;border-radius:10px;background:#1f9d55}
+.dlg .lk{background:#555;opacity:.6}
+.dlg .lk.on{background:#c1121f;opacity:1;animation:sk .4s}
+@keyframes sk{25%{transform:translateX(-5px)}75%{transform:translateX(5px)}}
+.hp{top:38px;left:12px;right:12px;font-size:12px;text-align:left}
+.hp div{height:10px;margin-top:2px;background:#3b3550;border-radius:6px;overflow:hidden}
+.hp s{display:block;height:100%;width:100%;background:#4ade80;transition:width 1.6s,background 1.6s}
+.hp s.on{width:3%;background:#ef4444}
+.logo{left:0;right:0;top:26%;font-size:17px;color:#ffd166}
+.cta{left:8%;right:8%;bottom:28%;padding:6px 10px;border-radius:12px;background:#fff;color:#8a1320;font-size:17px}
+.c2{bottom:19%}.c3{bottom:10%}
+.fig{width:30%;margin-left:-15%;scale:var(--s,1);transform-origin:50% 100%}
+.fig svg{display:block;width:100%;overflow:visible}
+.fig .al,.fig .ar,.ey{transform-box:fill-box;transform-origin:50% 6%}
+.ey{transform-origin:50% 50%}
+.bn{display:none}.ban .bn{display:inline}
+@keyframes bob{50%{transform:translateY(-6px)}}
+@keyframes sh{25%{transform:translateX(-3px)}75%{transform:translateX(3px)}}
+@keyframes jp{50%{transform:translateY(-14px)}}
+@keyframes wv{to{transform:rotate(-120deg)}}
+@keyframes cl{to{transform:rotate(-30deg)}}
+@keyframes dr{to{translate:75% 0}}
+@keyframes wk{from{translate:-260% 0}}
+@keyframes sit{from{translate:0 -40%}}
+@keyframes lm{50%{transform:scale(1.06)}}
+@keyframes fa{to{translate:0 180px;rotate:90deg}}
+@keyframes tl{50%{transform:rotate(-6deg)}}
+@keyframes up{to{transform:rotate(-160deg)}}
+.on.eat svg,.on.bob{animation:bob .5s infinite}
+.on.jump svg{animation:jp .35s 2}
+.on.shake svg{animation:sh .12s infinite}
+.on.think svg{animation:tl 1s infinite}
+.on.loom svg{animation:lm 1.2s infinite}
+.on.walk{animation:wk 1.2s ease-out both}
+.on.drag{animation:dr 2.5s ease-in-out both}
+.on.sit{animation:sit .3s ease-in both}
+.on.fall{animation:fa 1s ease-in both}
+.on.point .ar{transform:rotate(-95deg)}
+.on.pt .ar{transform:rotate(-130deg)}
+.on.hold .ar{transform:rotate(-80deg)}
+.on.holdl .al{transform:rotate(80deg)}
+.on.wave .ar{animation:wv .4s infinite alternate}
+.on.clap .al,.on.clap .ar{animation:cl .3s infinite alternate}
+.on.cheer svg{animation:jp .5s infinite}
+.on.cheer .al{transform:rotate(155deg)}.on.cheer .ar{transform:rotate(-155deg)}
+.on.raise .ar{animation:up 3.5s ease-in-out both}
+.on.bow svg{transform:rotate(18deg)}
+.on.shut .ey{transform:scaleY(.1)}
+@media (prefers-reduced-motion:reduce){.on.walk,.on.drag,.on.sit,.on.fall,.on.raise .ar,.on svg,.on .al,.on .ar{animation:none}}
+.ctl{display:flex;align-items:center;gap:8px;max-width:340px;margin:12px auto 0}
+button{font:inherit;font-size:18px;width:44px;height:44px;flex:none;border-radius:50%;border:1px solid var(--line);background:var(--card);color:var(--fg);cursor:pointer}
+input[type=range]{flex:1;min-width:0;accent-color:var(--acc)}
+.tm{flex:none;width:62px;font-size:12px;color:var(--mut);text-align:right}
+:focus-visible{outline:2px solid var(--acc);outline-offset:2px}
+.card{max-width:340px;margin:12px auto 0;padding:12px 14px;background:var(--card);border:1px solid var(--line);border-radius:12px}
+.tg{margin-bottom:2px;font-weight:700;color:var(--acc);font-size:13px}
+.card p{margin:0;font-size:14px}
+@media (prefers-reduced-motion:reduce){.alert,.dlg .lk.on{animation:none}.ov,.hp s{transition:none}}
+</style>
+</head>
+<body>
+<div class="wrap">
+<h1>🎬 Demo kịch bản “Nhiệm vụ ẩn: Hiến máu”</h1>
+<p class="mut">Bản dựng thử 60 giây với nhân vật hoạt hình đơn giản để hình dung hành động từng cảnh. Chưa có diễn viên thật và chưa có tiếng.</p>
+<div class="stage" id="st"></div>
+<div class="ctl">
+<button id="pl" aria-label="Phát hoặc tạm dừng">▶</button>
+<button id="rs" aria-label="Phát lại từ đầu">↺</button>
+<input id="sc" type="range" min="0" max="60" step="0.1" value="0" aria-label="Thanh thời gian">
+<span class="tm" id="tm">0:00 / 1:00</span>
+</div>
+<div class="card"><div class="tg" id="tg"></div><p id="dr"></p></div>
+</div>
+<script>
+const $=i=>document.getElementById(i),st=$('st');
+const fmt=x=>Math.floor(x/60)+':'+String(Math.floor(x%60)).padStart(2,'0');
+const o=(a,u,c,h)=>`<div class="ov ${c}" data-at="${a}"${u?` data-until="${u}"`:''}>${h}</div>`;
+const k=(a,u,e,w,l)=>o(a,u,'talk',`<i>${e}</i>${l?`<p><b>${w}</b>${l}</p>`:''}`);
+const S=[
+{a:0,b:4,c:'alert',n:'Hook',d:'Màn hình nháy đỏ. Lan (NPC) giao việc, Hùng đang ăn mì.',
+h:o(0,0,'chip','🔊 chuông cảnh báo')+o(.2,0,'big','⚠️ NHIỆM VỤ ẨN<br>XUẤT HIỆN!')+k(1,2.9,'🧙','Lan · NPC','“Dũng sĩ Hùng… làng ta cần ngươi.”')+k(2.9,0,'🍜','Hùng','“…Lại gì nữa?”')},
+{a:4,b:14,c:'quest',n:'Giao nhiệm vụ',d:'Hộp nhiệm vụ hiện ra, Hùng hỏi “Boss là ai?”. Cắt sang boss (nhân viên y tế) ngược sáng, rồi đổi sang giọng thường. Thanh máu của Hùng tụt từ 100 xuống 3.',
+h:o(.3,3,'panel','QUEST<b>HIẾN MÁU TÌNH NGUYỆN</b>Thưởng: 🩹 huy hiệu + cứu tới 3 mạng người')+k(3,5,'🍜','Hùng','“Boss là ai?”')+o(5,0,'chip','🔊 nhạc boss')+o(5,0,'hp','HÙNG HP<div><s data-at="7.6"></s></div>')+k(5,7.5,'🧑‍⚕️','Boss','“Ngươi dám đến đây sao…?”')+k(7.5,0,'🧑‍⚕️','Boss (giọng thường)','“Anh điền phiếu đăng ký giúp em nha.”')},
+{a:14,b:30,c:'fight',n:'Đánh boss',d:'Minh và Trang vào buff, vỗ vai Hùng. Hùng nhắm tịt mắt, bị kéo lên ghế (âm “bonk”). Mở mắt ra: boss yếu hơn tưởng.',
+h:o(.3,3,'big','+BUFF ĐỒNG ĐỘI 💪')+k(1,5,'👫','Minh & Trang','“Có tụi này đi cùng!”')+k(5.5,9,'😖','Hùng','“AAAAA!” (nhắm tịt mắt)')+o(8,9.5,'chip','🔊 bonk!')+k(9.5,13,'😲','Hùng','“Ủa… boss cuối mà yếu vậy?”')+o(13,0,'chip','🔊 level up')+o(13,0,'big','BOSS ĐÃ BỊ HẠ 🏆')+k(13,0,'🏆','','')},
+{a:30,b:42,c:'calm',n:'Khoảng lặng',d:'Tắt nhạc game, slow-mo, màu phim dịu lại: cận cảnh miếng băng dán rồi một bàn tay được nắm chặt. Nhớ đối chiếu số “3 người” với tài liệu của BTC.',
+h:o(0,0,'chip','🔇 tắt nhạc game · slow-mo')+k(.5,4.5,'🩹','Voice-over','“Phần thưởng trong game là ảo.”')+k(4.5,8,'🤝','Voice-over','“Nhưng ở ngoài đời, phần thưởng này là thật.”')+o(8,0,'big stat','1 túi máu có thể giúp<br>tới 3 người')},
+{a:42,b:52,c:'quest',n:'Chốt hạ',d:'Hộp thoại “Nhận / Để lần sau”: nút “Để lần sau” bị khóa. Hùng chỉ vào nút khóa, nhìn thẳng camera.',
+h:o(0,0,'chip','🔊 nhạc game quay lại')+o(.3,0,'dlg','BẠN CÓ NHẬN<br>NHIỆM VỤ NÀY KHÔNG?<div><span>NHẬN ✅</span><span class="lk" data-at="3.5">ĐỂ LẦN SAU 🔒</span></div>')+k(5.5,0,'','Hùng · chỉ vào nút khóa','“Nút đó bị khóa rồi nha!”')},
+{a:52,b:60,c:'end',n:'End card',d:'Chữ chốt, tên chương trình, rồi ba dòng kêu gọi hiện lần lượt: comment “NHẬN”, tag 2 đồng đội, share.',
+h:o(.3,0,'big','LÊN LEVEL NGOÀI ĐỜI THẬT<br>ĐI HIẾN MÁU THÔI! 🩸')+o(2,0,'logo','Điện Hồng Nhân Ái lần 17')+o(3,0,'cta','Comment “NHẬN” để vào team')+o(4.5,0,'cta c2','Tag 2 đồng đội để lập party')+o(6,0,'cta c3','Share rủ cả đội đi cùng')}
+];
+const C={H:['#3b82f6','#1f2937'],L:['#7c3aed','#4c1d95'],M:['#16a34a','#7c4a21'],T:['#ec4899','#3b2a20'],B:['#f1f5f9','#cbd5e1']};
+const P=w=>{const[c,h]=C[w];return `<svg viewBox="0 -12 60 112"><g class="al"><rect x="8" y="40" width="9" height="28" rx="4.5" fill="${c}"/></g><g class="ar"><rect x="43" y="40" width="9" height="28" rx="4.5" fill="${c}"/><rect class="bn" x="44" y="58" width="7" height="6" fill="#ffe3b0" stroke="#e5484d"/></g><rect x="18" y="38" width="24" height="34" rx="9" fill="${c}"/><rect x="20" y="70" width="8" height="24" rx="4" fill="#2b2540"/><rect x="32" y="70" width="8" height="24" rx="4" fill="#2b2540"/><circle cx="30" cy="24" r="15" fill="#f3c9a0"/>${w=='L'?`<polygon points="14,16 30,-12 46,16" fill="${h}"/>`:w=='B'?`<rect x="19" y="3" width="22" height="9" rx="2" fill="#fff"/><path d="M30 46v14M23 53h14" stroke="#e5484d" stroke-width="5"/>`:`<path d="M15 22Q30 0 45 22Z" fill="${h}"/>`}<g class="ey" fill="#222"><circle cx="25" cy="25" r="2"/><circle cx="35" cy="25" r="2"/></g><path d="M26 32Q30 35 34 32" stroke="#a0522d" fill="none" stroke-width="1.5"/></svg>`};
+const f=(a,u,w,x,y,g,s)=>`<div class="ov fig ${g}" data-at="${a}"${u?` data-until="${u}"`:''} style="left:${x}%;top:${y}%;--s:${s||1}">${P(w)}</div>`;
+const q=(a,u,x,y,e,z,g)=>`<div class="ov ${g||''}" data-at="${a}"${u?` data-until="${u}"`:''} style="left:${x}%;top:${y}%;font-size:${z}px">${e}</div>`;
+const F=[
+f(0,0,'L',26,40,'point')+f(0,2.9,'H',74,40,'eat')+f(2.9,0,'H',74,40,'jump')+q(0,2.9,63,60,'🍜',30,'bob')+q(2.9,0,63,60,'🍜',30,'fall'),
+f(0,5,'H',26,46,'think')+f(5,0,'H',26,46,'shake')+f(5,7.5,'B',74,34,'loom',1.25)+f(7.5,0,'B',74,34,'wave',1.25),
+q(0,0,64,60,'🪑',72)+f(0,5.5,'H',52,46,'think')+f(1,5.5,'M',14,46,'walk')+f(1,5.5,'T',32,46,'walk')+f(5.5,8,'H',52,46,'drag shut')+f(5.5,8,'M',14,46,'drag')+f(5.5,8,'T',32,46,'drag')+f(8,0,'M',36.5,46,'clap')+f(8,0,'T',54.5,46,'clap')+f(8,9.5,'H',74.5,52,'sit shut')+f(9.5,13,'H',74.5,52,'jump ban')+f(13,0,'H',74.5,52,'cheer ban')+f(13,0,'B',16,46,'bow'),
+f(.5,4.5,'H',50,36,'raise ban',1.8)+f(4.5,8,'H',30,46,'hold ban')+f(4.5,8,'L',70,46,'holdl'),
+f(0,0,'H',22,50,'pt ban',.8)+f(0,0,'M',44,52,'clap ban',.8)+f(0,0,'T',66,52,'clap ban',.8)+f(0,0,'L',88,52,'clap',.8),
+f(.3,0,'H',16,34,'cheer ban',.8)+f(.3,0,'M',38,34,'cheer ban',.8)+f(.3,0,'T',62,34,'cheer ban',.8)+f(.3,0,'L',84,34,'cheer ban',.8)
+];
+let t=0,pl=false,ls=0,cur=-1;
+function R(){
+let i=S.findIndex(s=>t>=s.a&&t<s.b);if(i<0)i=S.length-1;
+const s=S[i];
+if(i!==cur){cur=i;st.className='stage '+s.c;st.innerHTML=F[i]+s.h;$('tg').textContent=s.a+'–'+s.b+'s · '+s.n;$('dr').textContent=s.d}
+const l=t-s.a;
+st.querySelectorAll('[data-at]').forEach(e=>{const u=e.dataset.until;e.classList.toggle('on',l>=+e.dataset.at&&(!u||l<+u))});
+$('sc').value=t;$('tm').textContent=fmt(t)+' / 1:00';
+}
+function tick(n){if(!pl)return;t=Math.min(60,t+(n-ls)/1000);ls=n;if(t>=60){pl=false;$('pl').textContent='▶'}R();if(pl)requestAnimationFrame(tick)}
+$('pl').onclick=()=>{if(t>=60)t=0;pl=!pl;$('pl').textContent=pl?'⏸':'▶';if(pl){ls=performance.now();requestAnimationFrame(tick)}};
+$('rs').onclick=()=>{t=0;cur=-1;R();if(!pl)$('pl').click()};
+$('sc').oninput=e=>{t=+e.target.value;R()};
+R();$('pl').click();
+</script>
+</body>
+</html>

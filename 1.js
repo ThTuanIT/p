@@ -41,20 +41,11 @@
     console.log("Đã yêu cầu dừng.");
   };
 
-  // Tăng giới hạn tối đa từ 10 lên 200, mặc định nhập là 200
-  const raw = prompt("Số lượt tối đa (1–200):", "200");
-  if (raw === null) return;
+  console.log("Đã bắt đầu vòng lặp KHÔNG ĐỢI. Để dừng, gõ: stopShareLoopNow()");
 
-  const count = Number(raw);
-  if (!Number.isInteger(count) || count < 1 || count > 200) {
-    console.error("Số lượt không hợp lệ (cần từ 1 đến 200).");
-    return;
-  }
-
-  for (let i = 1; i <= count; i++) {
-    if (window.stopShareLoop) break;
-
-    console.log(`Lượt ${i}/${count}`);
+  let i = 1;
+  while (!window.stopShareLoop) {
+    console.log(`Lượt ${i}`);
 
     const all = elements().filter(isShare);
     const candidates = all.filter(el =>
@@ -70,13 +61,14 @@
       break;
     }
 
-    // Tự chọn mục 0
+    // Nhấn nút Share
     candidates[0].click();
 
     let submit = null;
-    for (let j = 0; j < 40; j++) {
+    // Kiểm tra nhanh mỗi 50ms xem bảng Share now xuất hiện chưa
+    for (let j = 0; j < 20; j++) {
       if (window.stopShareLoop) break;
-      await sleep(250);
+      await sleep(50);
       submit = findShareNow();
       if (submit) break;
     }
@@ -88,20 +80,21 @@
       break;
     }
 
+    // Nhấn Share now ngay lập tức
     submit.click();
     console.log(`Đã nhấn Share now lượt ${i}.`);
 
-    await sleep(5000);
+    if (window.stopShareLoop) break;
 
-    if (i < count) {
-      // Cuộn để tải nội dung kế tiếp
-      window.scrollBy({
-        top: Math.floor(window.innerHeight * 0.8),
-        behavior: "smooth"
-      });
+    // Cuộn xuống lập tức
+    window.scrollBy({
+      top: Math.floor(window.innerHeight * 0.8),
+      behavior: "instant"
+    });
 
-      await sleep(3000);
-    }
+    // Nghỉ cực ngắn (50ms) để nhường luồng xử lý DOM
+    await sleep(50);
+    i++;
   }
 
   console.log("Đã kết thúc vòng lặp.");
